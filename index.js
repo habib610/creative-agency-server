@@ -54,6 +54,14 @@ app.get('/takenServices', (req, res)=>{
     })
 })
 
+//getting all user who are using our services
+app.get('/allUsers', (req, res)=>{
+    orderCollection.find({})
+    .toArray((err, documents)=>{
+    res.send(documents);
+    })
+})
+
 //getting all reviews to home page
 app.get('/getReviews', (req, res)=>{
     reviewCollection.find({})
