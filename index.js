@@ -24,21 +24,21 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
 client.connect(err => {
   const orderCollection = client.db(`${process.env.DB_NAME}`).collection("orders");
   const reviewCollection = client.db(`${process.env.DB_NAME}`).collection("reviews");
+  const adminCollection = client.db(`${process.env.DB_NAME}`).collection("admins");
 
 ///taking order from clients
 app.post("/takeOrder", (req, res)=>{
     const order = req.body;
-    // console.log(order)
     orderCollection.insertOne(order)
     .then(result=>{
         res.send(result.insertedCount > 0)
     })
 })
 
+
 //taking Reviews form client
 app.post("/takeReview", (req, res)=>{
     const review = req.body;
-    console.log(review)
     reviewCollection.insertOne(review)
     .then(result=>{
         res.send(result.insertedCount > 0)
@@ -54,6 +54,7 @@ app.get('/takenServices', (req, res)=>{
     })
 })
 
+
 //getting all user who are using our services
 app.get('/allUsers', (req, res)=>{
     orderCollection.find({})
@@ -62,14 +63,34 @@ app.get('/allUsers', (req, res)=>{
     })
 })
 
+
 //getting all reviews to home page
 app.get('/getReviews', (req, res)=>{
     reviewCollection.find({})
     .toArray((err, documents)=>{
     res.send(documents);
-
     })
 })
+
+
+// make  admins
+app.post('/makeAdmin', (req, res)=>{
+    const admin = req.body;
+    adminCollection.insertOne(admin)
+    .then(result=>{
+        res.send(result.insertedCount > 0)
+    })
+})
+
+// Testing admin or user 
+app.get('/getAdmin', (req, res)=>{
+    adminCollection.find({email: req.query.email})
+    .toArray((err, documents)=>{
+    res.send(documents.length > 0);
+    })
+})
+
+
 
 
 //   client.close();
