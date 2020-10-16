@@ -1,6 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
+const ObjectId = require('mongodb').ObjectId;
 const fs = require('fs-extra');
 const fileUpload = require('express-fileupload');
 require('dotenv').config();
@@ -102,6 +103,17 @@ app.get('/getService', (req, res)=>{
     })
 })
 
+//update Status
+app.patch('/updateStatus/:uniqueKey', (req, res)=>{
+    console.log(req.params.uniqueKey)
+    orderCollection.updateOne({_id: ObjectId(req.params.uniqueKey)},
+  {
+    $set:{status: req.body.status}
+  })
+  .then(result=>{
+    console.log(result)
+  })
+})
 
 
 //fileUpload files
